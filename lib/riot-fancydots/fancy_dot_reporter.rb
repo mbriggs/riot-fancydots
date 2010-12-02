@@ -2,6 +2,7 @@ module Riot
   class FancyDotReporter < IOReporter
     def initialize(writer=STDOUT)
       super
+      puts "\n"
       @details = []
     end
 
@@ -21,7 +22,7 @@ module Riot
     end
 
     def results(time_taken)
-      puts "\n#{@details.join("\n\n")}" unless @details.empty?
+      puts "\n\n#{@details.join("\n\n")}" unless @details.empty?
       super
     end
   private
