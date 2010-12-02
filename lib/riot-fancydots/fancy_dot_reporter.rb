@@ -12,24 +12,37 @@ module Riot
 
     def fail(description, message, line, file)
       print yellow("F")
-      @details << "#{yellow bold('FAILURE')} #{green dark(line_info(line, file))} #{test_detail(description, message)}".strip
+      @details << "#{yellow bold('FAILURE')} #{test_description(description)} #{green line_info(line, file)} #{test_detail(message)}".strip
     end
 
     def error(description, e)
       print red("E")
       location = filter_backtrace(e.backtrace).last
-      @details << "#{red bold('ERROR')}   #{green dark(line_info(*location.split(':').reverse))} #{test_detail(description, white(dark(format_error e)))}"
+      @details << "#{red bold('ERROR')}   #{test_description(description)} #{green line_info(*location.split(':').reverse)} #{test_detail(test_error e)}"
     end
 
     def results(time_taken)
       puts "\n\n#{@details.join("\n\n")}" unless @details.empty?
       super
     end
-  private
-    def test_detail(description, message)
-      "#{current_context.detailed_description} #{description}\n#{white bold("=>")} #{message}"
+
+private
+    def test_detail(message)
+      "\n#{white bold("=>")} #{message}"
     end
-#need to make this protected
+
+    def test_error(e)
+      lines = format_error(e).split("\n")
+      error = lines.shift
+
+      "#{error.strip}\n #{dark lines.join("\n")}"
+    end
+
+    def test_description(description)
+      "#{current_context.detailed_description} #{description}"
+    end
+
+#need to make this protected in IOReporter
     def filter_backtrace(backtrace)
       cleansed = []
       bad = true
