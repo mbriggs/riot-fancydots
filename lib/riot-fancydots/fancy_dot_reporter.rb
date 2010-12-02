@@ -12,13 +12,13 @@ module Riot
 
     def fail(description, message, line, file)
       print yellow("F")
-      @details << "#{yellow bold('FAILURE')} #{test_description(description)} #{green line_info(line, file)} #{test_detail(message)}".strip
+      @details << "#{yellow bold_dark('FAILURE')} #{test_description(description)} #{green line_info(line, file)} #{test_detail(message)}".strip
     end
 
     def error(description, e)
       print red("E")
       location = filter_backtrace(e.backtrace).last
-      @details << "#{red bold('ERROR')}   #{test_description(description)} #{green line_info(*location.split(':').reverse)} #{test_detail(test_error e)}"
+      @details << "#{red bold_dark('ERROR')}   #{test_description(description)} #{green line_info(*location.split(':').reverse)} #{test_detail(test_error e)}"
     end
 
     def results(time_taken)
@@ -27,6 +27,10 @@ module Riot
     end
 
 private
+    def bold_dark(str)
+      bold dark(str)
+    end
+
     def test_detail(message)
       "\n#{white bold("=>")} #{message}"
     end
